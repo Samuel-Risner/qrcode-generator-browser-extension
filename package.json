@@ -1,7 +1,7 @@
 {
-  "name": "browser-extension-template",
+  "name": "qrcode-generator-browser-extension",
   "version": "1.0.0",
-  "description": "A template for creating a browser extension (Firefox).",
+  "description": "A browser extension that lets you generate QRCodes on the fly.",
   "main": "extension/js/dist/bundle.js",
   "scripts": {
     "build_tw": "tailwindcss -i ./tw/input.css -o ./extension/css/dist/output.css --minify",
@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Samuel-Risner/browser-extension-template.git"
+    "url": "git+https://github.com/Samuel-Risner/qrcode-generator-browser-extension.git"
   },
   "author": "Samuel Risner",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Samuel-Risner/browser-extension-template/issues"
+    "url": "https://github.com/Samuel-Risner/qrcode-generator-browser-extension/issues"
   },
-  "homepage": "https://github.com/Samuel-Risner/browser-extension-template#readme",
+  "homepage": "https://github.com/Samuel-Risner/qrcode-generator-browser-extension#readme",
   "dependencies": {
     "tailwindcss": "^3.3.2",
     "ts-loader": "^9.4.4",
