@@ -1,0 +1,24 @@
+{
+
+  "manifest_version": 2,
+  "name": "",
+  "version": "1.0",
+
+  "description": "",
+
+  "homepage_url": "",
+
+  "icons": {
+    "48": "",
+    "96": ""
+  },
+
+  "content_scripts": [
+    {
+      "matches": [""],
+      "js": ["js/dist/bundle.js"],
+      "css": ["css/dist/output.css"]
+    }
+  ]
+
+}
