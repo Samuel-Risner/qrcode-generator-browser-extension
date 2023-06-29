@@ -1,23 +1,21 @@
 {
 
   "manifest_version": 2,
-  "name": "QRcode generator",
+  "name": "QRcode Generator",
   "version": "1.0",
 
   "description": "Lets you generate QRCodes on the fly.",
 
   "homepage_url": "https://github.com/Samuel-Risner/qrcode-generator-browser-extension",
 
-  "icons": {
-    "48": "",
-    "96": ""
+  "browser_action": {
+    "default_title": "QRcode Generator",
+    "default_popup": "popup.html"
   },
 
   "content_scripts": [
     {
-      "matches": [""],
-      "js": ["js/dist/bundle.js"],
-      "css": ["css/dist/output.css"]
+      "matches": ["<all_urls>"]
     }
   ]
 
