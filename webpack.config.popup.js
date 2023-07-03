@@ -1,12 +1,17 @@
 const path = require("path");
 
 module.exports = {
-  entry: "./src/index.ts",
+  entry: path.resolve(__dirname, "src", "popup", "index.ts"),
   module: {
     rules: [
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        use: [{
+          loader: 'ts-loader',
+          options: {
+              configFile: "tsconfig.popup.json"
+          }
+      }],
         exclude: /node_modules/,
       },
     ],
@@ -15,7 +20,8 @@ module.exports = {
     extensions: [".ts", ".js"],
   },
   output: {
-    filename: "bundle.js",
+    filename: "popup.js",
     path: path.resolve(__dirname, "extension", "js", "dist"),
   },
+  mode: "production",
 };

@@ -6,9 +6,11 @@
   "scripts": {
     "build_tw": "tailwindcss -i ./tw/input.css -o ./extension/css/dist/output.css --minify",
     "watch_tw": "tailwindcss -i ./tw/input.css -o ./extension/css/dist/output.css --watch",
-    "build_wp": "webpack --config webpack.config.js",
-    "watch_wp": "webpack --config webpack.config.js --watch",
-    "build": "npm run build_tw %% npm run build_wp"
+    "build_wp_popup": "webpack --config webpack.config.popup.js",
+    "watch_wp_popup": "webpack --config webpack.config.popup.js --watch",
+    "build_wp_background": "webpack --config webpack.config.background.js",
+    "watch_wp_background": "webpack --config webpack.config.background.js --watch",
+    "build": "npm run build_tw && npm run build_wp_popup && npm run build_wp_background"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,7 @@
   },
   "homepage": "https://github.com/Samuel-Risner/qrcode-generator-browser-extension#readme",
   "dependencies": {
+    "@types/firefox-webext-browser": "^111.0.1",
     "tailwindcss": "^3.3.2",
     "ts-loader": "^9.4.4",
     "typescript": "^5.1.6",

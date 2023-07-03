@@ -13,10 +13,20 @@
     "default_popup": "popup.html"
   },
 
+  "permissions": [
+    "tabs",
+    "storage"
+  ],
+
   "content_scripts": [
     {
       "matches": ["<all_urls>"]
     }
-  ]
+  ],
+
+  "background": {
+    "scripts": ["js/dist/background.js"],
+    "persistent": false
+  }
 
 }
