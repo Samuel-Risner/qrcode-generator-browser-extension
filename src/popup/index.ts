@@ -4,7 +4,6 @@ import { CorrectLevel } from "../shared/correctLevel";
 import { MessageTypes } from "../shared/messageTypes";
 import settings from "../shared/settings";
 import { AddUrlMessage, AddUrlResponse, GetQrSettingsAndDarkModeMessage, GetQrSettingsAndDarkModeResponse, GetUrlsMessage, GetUrlsResponse, SetCorrectLevelMessage, SetDarkAndLightColorMessage, SetDarkColorMessage, SetLightColorMessage, ToggleDarkModeMessage, ToggleDarkModeResponse } from "../shared/types";
-import { library } from "webpack";
 
 type AllElements = {
     app: HTMLDivElement;
@@ -368,7 +367,7 @@ async function main() {
     const url: string | undefined = (await urlPromise)[0].url;
     const qrSettingsAndDarkMode: GetQrSettingsAndDarkModeResponse = await qrSettingsAndDarkModePromise;
 
-    const code = new Code(url, allElements.qrCode, qrSettingsAndDarkMode);
+    const code = new Code(url, allElements.qrCode, { colorDark: qrSettingsAndDarkMode.colorDark, colorLight: qrSettingsAndDarkMode.colorLight, correctLevel: qrSettingsAndDarkMode.correctLevel });
     const savedUrls = new SavedUrls((url: string) => { addSavedUrl(url, allElements, code); }, allElements.savedUrlsMenu);
 
     setStyles(url, qrSettingsAndDarkMode.correctLevel, qrSettingsAndDarkMode.colorDark, qrSettingsAndDarkMode.colorLight, allElements, allElements);
