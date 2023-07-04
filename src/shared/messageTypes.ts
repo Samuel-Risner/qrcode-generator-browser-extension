@@ -4,8 +4,7 @@ export enum MessageTypes {
     GetUrls,
     RemoveUrl,
     ToggleDarkMode,
-    GetDarkMode,
-    GetQrSettings,
     SetCorrectLevel,
+    GetQrSettingsAndDarkMode,
 
 }

@@ -1,8 +1,8 @@
-import { AddUrlMessage, AddUrlResponse, BasicMessage, GetDarkModeResponse, GetQrSettingsResponse, GetUrlsResponse, RemoveUrlMessage, RemoveUrlResponse, SetCorrectLevelMessage, SetCorrectLevelResponse, ToggleDarkModeResponse } from "../shared/types";
+import { CorrectLevel } from "../shared/correctLevel";
 import { MessageTypes } from "../shared/messageTypes";
 import { removeElementFromArray } from "../shared/misc";
-import { CorrectLevel } from "../shared/correctLevel";
 import settings from "../shared/settings";
+import { AddUrlMessage, AddUrlResponse, BasicMessage, GetQrSettingsAndDarkModeResponse, GetUrlsResponse, RemoveUrlMessage, RemoveUrlResponse, SetCorrectLevelMessage, SetCorrectLevelResponse, ToggleDarkModeResponse } from "../shared/types";
 
 type SavedData = {
     urls: string[];
@@ -29,7 +29,7 @@ async function addUrl(sendResponse: (response: AddUrlResponse) => void, url: str
     const data = (await browser.storage.local.get()) as SavedData;
     data.urls.push(url);
     data.urlVersion += 1;
-    browser.storage.local.set(data);
+    await browser.storage.local.set(data);
     sendResponse(data);
 }
 
@@ -42,32 +42,28 @@ async function removeUrl(sendResponse: (response: RemoveUrlResponse) => void, ur
     const data = (await browser.storage.local.get()) as SavedData;
     removeElementFromArray(data.urls, url);
     data.urlVersion += 1;
-    browser.storage.local.set(data);
+    await browser.storage.local.set(data);
     sendResponse(data);
 }
 
 async function toggleDarkMode(sendResponse: (response: ToggleDarkModeResponse) => void) {
     const data = (await browser.storage.local.get()) as SavedData;
     data.isDark = !data.isDark;
-    browser.storage.local.set(data);
+    await browser.storage.local.set(data);
     sendResponse( { isDark: data.isDark });
-}
-
-async function getDarkMode(sendResponse: (response: GetDarkModeResponse) => void) {
-    const data = (await browser.storage.local.get()) as SavedData;
-    sendResponse( { isDark: data.isDark });
-}
-
-async function getQrSettings(sendResponse: (response: GetQrSettingsResponse) => void) {
-    const data = (await browser.storage.local.get()) as SavedData;
-    sendResponse( { colorDark: data.colorDark, colorLight: data.colorLight, correctLevel: data.correctLevel });
 }
 
 async function setCorrectLevel(sendResponse: (response: SetCorrectLevelResponse) => void, correctLevel: CorrectLevel) {
     const data = (await browser.storage.local.get()) as SavedData;
     data.correctLevel = correctLevel;
-    browser.storage.local.set(data);
+    await browser.storage.local.set(data);
     sendResponse({});
+}
+
+async function getQrSettingsAndDarkMode(sendResponse: (response: GetQrSettingsAndDarkModeResponse) => void) {
+    const data = (await browser.storage.local.get()) as SavedData;
+    await browser.storage.local.set(data);
+    sendResponse({ isDark: data.isDark, colorDark: data.colorDark, colorLight: data.colorLight, correctLevel: data.correctLevel });
 }
 
 browser.runtime.onMessage.addListener((message: BasicMessage, sender: browser.runtime.MessageSender, sendResponse: (response?: any) => void) => {
@@ -88,16 +84,12 @@ browser.runtime.onMessage.addListener((message: BasicMessage, sender: browser.ru
             toggleDarkMode(sendResponse);
             break;
 
-        case MessageTypes.GetDarkMode:
-            getDarkMode(sendResponse);
-            break;
-
-        case MessageTypes.GetQrSettings:
-            getQrSettings(sendResponse);
-            break;
-
         case MessageTypes.SetCorrectLevel:
             setCorrectLevel(sendResponse, (message as SetCorrectLevelMessage).correctLevel);
+            break;
+        
+        case MessageTypes.GetQrSettingsAndDarkMode:
+            getQrSettingsAndDarkMode(sendResponse);
             break;
     }
 

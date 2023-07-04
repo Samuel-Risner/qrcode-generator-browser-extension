@@ -1,27 +1,23 @@
-import settings from "../shared/settings";
 import { CorrectLevel } from "../shared/correctLevel";
+import settings from "../shared/settings";
 
-type Args2 = {
+interface OptionArgs {
     correctLevel?: CorrectLevel;
     colorDark?: string;
     colorLight?: string;
 }
 
-type Args =  {
-    url: string;
-    correctLevel?: CorrectLevel;
-    colorDark?: string;
-    colorLight?: string;
+interface OptionArgsWithUrl extends OptionArgs {
+    url?: string;
 }
 
 export default class Code {
 
     private subContainer: HTMLDivElement;
     private qr: any;
-
     private url: string;
 
-    constructor(url: string | undefined, private container: HTMLDivElement, { correctLevel=settings.default.correctLevel, colorDark=settings.default.colorDark, colorLight=settings.default.colorLight }: Args2) {
+    constructor(url: string | undefined, private container: HTMLDivElement, { correctLevel=settings.default.correctLevel, colorDark=settings.default.colorDark, colorLight=settings.default.colorLight }: OptionArgs) {
         this.subContainer = document.createElement("div");
         this.container.appendChild(this.subContainer);
 
@@ -35,8 +31,6 @@ export default class Code {
             this.qr = new QRCode(this.subContainer, { text: url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight });
             this.url = url;
         }
-
-        console.log(this.qr.correctLevel);
     }
 
     private resetQrCode() {
@@ -46,9 +40,8 @@ export default class Code {
         this.container.appendChild(this.subContainer);
     }
 
-    setStuff({ correctLevel=settings.default.correctLevel, colorDark=settings.default.colorDark, colorLight=settings.default.colorLight }: Args2) {
+    setStuff({ correctLevel=settings.default.correctLevel, colorDark=settings.default.colorDark, colorLight=settings.default.colorLight }: OptionArgs) {
         this.resetQrCode();
-
         // @ts-ignore
         this.qr = new QRCode(this.subContainer, { text: this.url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight });
     }
@@ -60,17 +53,11 @@ export default class Code {
         this.qr.makeCode(url);
     }
 
-    setAndCreate({ url, correctLevel=0, colorDark="#000000", colorLight="#ffffff" }: Args) {
+    setAndCreate({ url=this.url, correctLevel=settings.default.correctLevel, colorDark=settings.default.colorDark, colorLight=settings.default.colorLight }: OptionArgsWithUrl) {
         this.url = url;
-
         this.resetQrCode();
-
         // @ts-ignore
         this.qr = new QRCode(this.subContainer, { text: url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight });
     }
 
-    // getCorrectLevel(): CorrectLevel {
-    //     return this.co
-    // }
-    
 }

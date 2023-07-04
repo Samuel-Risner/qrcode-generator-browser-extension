@@ -1,5 +1,5 @@
-import { MessageTypes } from "./../shared/messageTypes";
-import { RemoveUrlMessage, RemoveUrlResponse } from "./../shared/types";
+import { MessageTypes } from "../shared/messageTypes";
+import { RemoveUrlMessage, RemoveUrlResponse } from "../shared/types";
 
 export default class SavedUrls {
 

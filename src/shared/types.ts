@@ -10,11 +10,15 @@ interface UrlResponse {
     urlVersion: number;
 }
 
+
+
 export interface GetUrlsMessage extends BasicMessage {
     type: MessageTypes.GetUrls;
 }
 
 export interface GetUrlsResponse extends UrlResponse {}
+
+
 
 export interface AddUrlMessage extends BasicMessage {
     type: MessageTypes.AddUrl;
@@ -23,12 +27,16 @@ export interface AddUrlMessage extends BasicMessage {
 
 export interface AddUrlResponse extends UrlResponse {}
 
+
+
 export interface RemoveUrlMessage extends BasicMessage {
     type: MessageTypes.RemoveUrl;
     url: string;
 }
 
 export interface RemoveUrlResponse extends UrlResponse {}
+
+
 
 export interface ToggleDarkModeMessage extends BasicMessage {
     type: MessageTypes.ToggleDarkMode;
@@ -38,23 +46,7 @@ export interface ToggleDarkModeResponse {
     isDark: boolean;
 }
 
-export interface GetDarkModeMessage extends BasicMessage {
-    type: MessageTypes.GetDarkMode;
-}
 
-export interface GetDarkModeResponse {
-    isDark: boolean;
-}
-
-export interface GetQrSettingsMessage extends BasicMessage {
-    type: MessageTypes.GetQrSettings;
-}
-
-export interface GetQrSettingsResponse {
-    correctLevel: CorrectLevel;
-    colorDark: string;
-    colorLight: string;
-}
 
 export interface SetCorrectLevelMessage extends BasicMessage {
     type: MessageTypes.SetCorrectLevel;
@@ -62,3 +54,16 @@ export interface SetCorrectLevelMessage extends BasicMessage {
 }
 
 export interface SetCorrectLevelResponse {}
+
+
+
+export interface GetQrSettingsAndDarkModeMessage extends BasicMessage {
+    type: MessageTypes.GetQrSettingsAndDarkMode;
+}
+
+export interface GetQrSettingsAndDarkModeResponse {
+    isDark: boolean;
+    correctLevel: CorrectLevel;
+    colorDark: string;
+    colorLight: string;
+}
