@@ -24,7 +24,7 @@ type AllElements = {
             licensingText: HTMLAnchorElement;
 }
 
-function setupElements(): AllElements {
+function createAndGetElements(): AllElements {
     return {
         app: document.getElementById("app") as HTMLDivElement,
             appContents: document.createElement("div"),
@@ -47,24 +47,24 @@ function setupElements(): AllElements {
     }
 }
 
-function combineElements(aE: AllElements) {
-    aE.app.appendChild(aE.appContents);
-        aE.appContents.appendChild(aE.topBar);
-            aE.topBar.appendChild(aE.popupButton);
-                aE.popupButton.appendChild(aE.popupImage);
-            aE.topBar.appendChild(aE.savedUrlsButton);
-            aE.topBar.appendChild(aE.darkModeButton);
-        aE.appContents.appendChild(aE.savedUrlsMenu);
-        aE.appContents.appendChild(aE.qrCode);
-        aE.appContents.append(aE.urlOptionsContainer);
-            aE.urlOptionsContainer.appendChild(aE.buttonContainer);
-                aE.buttonContainer.appendChild(aE.thisPageButton);
-                aE.buttonContainer.appendChild(aE.customPageButton);
-            aE.urlOptionsContainer.appendChild(aE.saveUrlButton);
-        aE.appContents.appendChild(aE.input);
-        aE.appContents.appendChild(aE.qrCodeCorrectLevel);
-        aE.appContents.appendChild(aE.qrCodeCorrectLevelDataList);
-        aE.appContents.appendChild(aE.licensingText);
+function combineElements({ app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, buttonContainer, thisPageButton, customPageButton, savedUrlsButton, input, qrCodeCorrectLevel, qrCodeCorrectLevelDataList, licensingText }: AllElements) {
+    app.appendChild(appContents);
+        appContents.appendChild(topBar);
+            topBar.appendChild(popupButton);
+                popupButton.appendChild(popupImage);
+            topBar.appendChild(savedUrlsButton);
+            topBar.appendChild(darkModeButton);
+        appContents.appendChild(savedUrlsMenu);
+        appContents.appendChild(qrCode);
+        appContents.append(urlOptionsContainer);
+            urlOptionsContainer.appendChild(buttonContainer);
+                buttonContainer.appendChild(thisPageButton);
+                buttonContainer.appendChild(customPageButton);
+            urlOptionsContainer.appendChild(saveUrlButton);
+        appContents.appendChild(input);
+        appContents.appendChild(qrCodeCorrectLevel);
+        appContents.appendChild(qrCodeCorrectLevelDataList);
+        appContents.appendChild(licensingText);
 }
 
 function setStyleButtonSelected(el: HTMLButtonElement) {
@@ -244,12 +244,12 @@ function addSavedUrl(url: string, aE: AllElements, qrCode: any) {
 async function main() {
     let urlPromise: Promise<browser.tabs.Tab[]> = browser.tabs.query({ currentWindow: true, active: true });
 
-    const allElements = setupElements();
+    const allElements = createAndGetElements();
     combineElements(allElements)
 
     let url: string | undefined = (await urlPromise)[0].url;
 
-    const code = new Code(url, allElements.qrCode, {});
+    // const code = new Code(url, allElements.qrCode, {});
 
     setStyles(allElements, url);
     setText(allElements, url);
