@@ -6,5 +6,8 @@ export enum MessageTypes {
     ToggleDarkMode,
     SetCorrectLevel,
     GetQrSettingsAndDarkMode,
+    SetDarkColor,
+    SetLightColor,
+    SetDarkAndLightColor,
 
 }

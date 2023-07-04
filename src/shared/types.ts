@@ -67,3 +67,31 @@ export interface GetQrSettingsAndDarkModeResponse {
     colorDark: string;
     colorLight: string;
 }
+
+
+
+export interface SetDarkColorMessage extends BasicMessage {
+    type: MessageTypes.SetDarkColor;
+    color: string;
+}
+
+export interface SetDarkColorResponse {}
+
+
+
+export interface SetLightColorMessage extends BasicMessage {
+    type: MessageTypes.SetLightColor;
+    color: string;
+}
+
+export interface SetLightColorResponse {}
+
+
+
+export interface SetDarkAndLightColorMessage extends BasicMessage {
+    type: MessageTypes.SetDarkAndLightColor;
+    colorDark: string;
+    colorLight: string;
+}
+
+export interface SetDarkAndLightColorResponse {}

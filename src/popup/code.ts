@@ -17,22 +17,28 @@ export default class Code {
     private qr: any;
     private url: string;
 
+    private correctLevel: CorrectLevel;
+    private colorDark: string;
+    private colorLight: string;
+    private useSvg: boolean;
+
     constructor(url: string | undefined, private container: HTMLDivElement, { correctLevel=settings.default.correctLevel, colorDark=settings.default.colorDark, colorLight=settings.default.colorLight }: OptionArgs) {
         this.subContainer = document.createElement("div");
         this.container.appendChild(this.subContainer);
 
+        this.correctLevel = correctLevel;
+        this.colorDark = colorDark;
+        this.colorLight = colorLight;
+        this.useSvg = settings.default.useSvg;
+
         if (url === undefined) {
             this.url = "";
-            // @ts-ignore
-            this.qr = new QRCode(this.subContainer, { text: url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight, useSVG: true });
+            this.createQrCode();
             this.qr.clear();
         } else {
-            // @ts-ignore
-            this.qr = new QRCode(this.subContainer, { text: url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight, useSVG: true });
             this.url = url;
+            this.createQrCode();
         }
-
-        console.log(this.container);
     }
 
     private resetQrCode() {
@@ -42,24 +48,36 @@ export default class Code {
         this.container.appendChild(this.subContainer);
     }
 
-    setStuff({ correctLevel=settings.default.correctLevel, colorDark=settings.default.colorDark, colorLight=settings.default.colorLight }: OptionArgs) {
-        this.resetQrCode();
+    private createQrCode() {
         // @ts-ignore
-        this.qr = new QRCode(this.subContainer, { text: this.url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight, useSVG: true });
+        this.qr = new QRCode(this.subContainer, { text: this.url, correctLevel: this.correctLevel, colorDark: this.colorDark, colorLight: this.colorLight, useSVG: this.useSvg });
+        this.qr.clear();
+        this.qr.makeCode(this.url);
+    }
+
+    setStuff({ correctLevel=settings.default.correctLevel, colorDark=settings.default.colorDark, colorLight=settings.default.colorLight }: OptionArgs) {
+        this.correctLevel = correctLevel;
+        this.colorDark = colorDark;
+        this.colorLight = colorLight;
+
+        this.resetQrCode();
+        this.createQrCode();
     }
 
     createCode(url: string) {
         this.url = url;
-        // @ts-ignore
         this.qr.clear();
         this.qr.makeCode(url);
     }
 
-    setAndCreate({ url=this.url, correctLevel=settings.default.correctLevel, colorDark=settings.default.colorDark, colorLight=settings.default.colorLight }: OptionArgsWithUrl) {
+    setAndCreate({ url=this.url, correctLevel=this.correctLevel, colorDark=this.colorDark, colorLight=this.colorLight }: OptionArgsWithUrl) {
+        this.correctLevel = correctLevel;
+        this.colorDark = colorDark;
+        this.colorLight = colorLight;
+
         this.url = url;
         this.resetQrCode();
-        // @ts-ignore
-        this.qr = new QRCode(this.subContainer, { text: url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight, useSVG: true });
+        this.createQrCode();
     }
 
 }

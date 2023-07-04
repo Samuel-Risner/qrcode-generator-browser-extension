@@ -4,7 +4,8 @@ const settings =  {
     default: {
         correctLevel: CorrectLevel.L,
         colorDark: "#000000",
-        colorLight: "#ffffff"
+        colorLight: "#ffffff",
+        useSvg: true
     },
     popupHtml: "/html/popup.html"
 }

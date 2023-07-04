@@ -3,7 +3,8 @@ import SavedUrls from "./savedUrls";
 import { CorrectLevel } from "../shared/correctLevel";
 import { MessageTypes } from "../shared/messageTypes";
 import settings from "../shared/settings";
-import { AddUrlMessage, AddUrlResponse, GetQrSettingsAndDarkModeMessage, GetQrSettingsAndDarkModeResponse, GetUrlsMessage, GetUrlsResponse, SetCorrectLevelMessage, ToggleDarkModeMessage, ToggleDarkModeResponse } from "../shared/types";
+import { AddUrlMessage, AddUrlResponse, GetQrSettingsAndDarkModeMessage, GetQrSettingsAndDarkModeResponse, GetUrlsMessage, GetUrlsResponse, SetCorrectLevelMessage, SetDarkAndLightColorMessage, SetDarkColorMessage, SetLightColorMessage, ToggleDarkModeMessage, ToggleDarkModeResponse } from "../shared/types";
+import { library } from "webpack";
 
 type AllElements = {
     app: HTMLDivElement;
@@ -28,8 +29,11 @@ type AllElements = {
                     correctLevelMButton: HTMLButtonElement;
                     correctLevelQButton: HTMLButtonElement;
                     correctLevelHButton: HTMLButtonElement;
-            downloadContainer: HTMLDivElement;
+            qrOptionsContainer: HTMLDivElement;
                 downloadSVGButton: HTMLButtonElement;
+                darkColorInput: HTMLInputElement;
+                switchColorButton: HTMLButtonElement;
+                lightColorInput: HTMLInputElement;
             licensingText: HTMLAnchorElement;
 }
 
@@ -57,13 +61,16 @@ function createAndGetElements(): AllElements {
                         correctLevelMButton: document.createElement("button"),
                         correctLevelQButton: document.createElement("button"),
                         correctLevelHButton: document.createElement("button"),
-                downloadContainer: document.createElement("div"),
+                qrOptionsContainer: document.createElement("div"),
                     downloadSVGButton: document.createElement("button"),
+                    darkColorInput: document.createElement("input"),
+                    switchColorButton: document.createElement("button"),
+                    lightColorInput: document.createElement("input"),
                 licensingText: document.createElement("a")
     }
 }
 
-function combineElements({ app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, pageButtonContainer, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelContainer, correctLevelDescription, correctLevelButtonContainer, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, downloadContainer, downloadSVGButton, licensingText }: AllElements) {
+function combineElements({ app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, pageButtonContainer, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelContainer, correctLevelDescription, correctLevelButtonContainer, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, qrOptionsContainer, downloadSVGButton, darkColorInput, switchColorButton, lightColorInput, licensingText }: AllElements) {
     app.appendChild(appContents);
         appContents.appendChild(topBar);
             topBar.appendChild(popupButton);
@@ -85,8 +92,11 @@ function combineElements({ app, appContents, topBar, popupButton, popupImage, sa
                 correctLevelButtonContainer.appendChild(correctLevelMButton);
                 correctLevelButtonContainer.appendChild(correctLevelQButton);
                 correctLevelButtonContainer.appendChild(correctLevelHButton);
-        appContents.appendChild(downloadContainer);
-            downloadContainer.appendChild(downloadSVGButton);
+        appContents.appendChild(qrOptionsContainer);
+            qrOptionsContainer.appendChild(downloadSVGButton);
+            qrOptionsContainer.appendChild(darkColorInput);
+            qrOptionsContainer.appendChild(switchColorButton);
+            qrOptionsContainer.appendChild(lightColorInput);
         appContents.appendChild(licensingText);
 }
 
@@ -113,7 +123,7 @@ function _setStylesCorrectLevelButtonUnselected({ correctLevelLButton, correctLe
     _setStyleCorrectLevelButtonUnselected(correctLevelHButton);
 }
 
-function setStyles(url: string | undefined, correctLevel: CorrectLevel, allElements: AllElements, { appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, pageButtonContainer, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelContainer, correctLevelDescription, correctLevelButtonContainer, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, downloadContainer, downloadSVGButton, licensingText }: AllElements) {
+function setStyles(url: string | undefined, correctLevel: CorrectLevel, darkColor: string, lightColor: string, allElements: AllElements, { appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, pageButtonContainer, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelContainer, correctLevelDescription, correctLevelButtonContainer, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, qrOptionsContainer, downloadSVGButton, darkColorInput, switchColorButton, lightColorInput, licensingText }: AllElements) {
     appContents.className = "bg-gray-100 dark:bg-zinc-800 grid grid-cols-1 gap-2 break-words w-80 text-center p-4";
         topBar.className = "flex flex-row h-8";
             popupButton.className = "w-7";
@@ -125,15 +135,21 @@ function setStyles(url: string | undefined, correctLevel: CorrectLevel, allEleme
         urlOptionsContainer.className = "flex flex-row";
             pageButtonContainer.className = "p-1 rounded-full bg-neutral-300 dark:bg-slate-600 text-black dark:text-neutral-200";
             saveUrlButton.className = "mx-auto text-2xl";
-        input.className = "text-center rounded-full p-2 bg-neutral-200 dark:bg-slate-600 text-black dark:text-neutral-200  disabled:text-neutral-400 dark:disabled:text-gray-500 dark:disabled:bg-slate-700";
+        input.className = "text-center rounded-full p-2 bg-neutral-200 dark:bg-slate-600 text-black dark:text-neutral-200 disabled:text-neutral-400 dark:disabled:text-gray-500 dark:disabled:bg-slate-700";
         correctLevelContainer.className = "flex flex-row";
             correctLevelDescription.className = "flex m-auto text-black dark:text-neutral-200";
             correctLevelButtonContainer.className = "p-1 rounded-full bg-neutral-300 dark:bg-slate-600 text-black dark:text-neutral-200";
-        downloadContainer.className = "flex flex-row m-auto";
-            downloadSVGButton.className = "py-1 px-2 rounded-full bg-neutral-300 dark:bg-slate-600 text-black dark:text-neutral-200";
+        qrOptionsContainer.className = "flex flex-row m-auto";
+            downloadSVGButton.className = "py-2 px-2 rounded-full bg-neutral-300 dark:bg-slate-600 text-black dark:text-neutral-200 flex";
+            darkColorInput.className = "w-1/4 grow mx-1 p-1 text-center rounded-full bg-neutral-200 dark:bg-slate-600 text-black dark:text-neutral-200 border-4";
+            switchColorButton.className = "text-2xl";
+            lightColorInput.className = darkColorInput.className;
         licensingText.className = "text-sky-600 dark:text-sky-400 text-sm underline decoration-dashed w-fit m-auto";
     
     input.disabled = true;
+
+    darkColorInput.style.borderColor = darkColor;
+    lightColorInput.style.borderColor = lightColor;
 
     if (url === undefined) {
         _setStylePageButtonSelected(customPageButton);
@@ -157,7 +173,7 @@ function setStyles(url: string | undefined, correctLevel: CorrectLevel, allEleme
     }
 }
 
-function setText(url: string | undefined, { popupButton, popupImage, saveUrlButton, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelDescription, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, licensingText, downloadSVGButton }: AllElements) {
+function setText(url: string | undefined, darkColor: string, lightColor: string, { popupButton, popupImage, saveUrlButton, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelDescription, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, licensingText, downloadSVGButton, darkColorInput, switchColorButton, lightColorInput }: AllElements) {
     popupButton.title = "Pop out to a new window";
 
     popupImage.src = "/assets/popup.svg";
@@ -191,6 +207,13 @@ function setText(url: string | undefined, { popupButton, popupImage, saveUrlButt
     downloadSVGButton.textContent = ".svg";
     downloadSVGButton.title = "Download SVG file";
 
+    switchColorButton.textContent = "🔄";
+    switchColorButton.title = "Switch colors";
+    darkColorInput.value = darkColor;
+    darkColorInput.title = "Set the color for the dark parts of the qr-code";
+    lightColorInput.value = lightColor;
+    lightColorInput.title = "Set the color for the light parts of the qr-code";
+
     licensingText.textContent = "About license";
     licensingText.href = "https://github.com/Samuel-Risner/qrcode-generator-browser-extension#readme";
     licensingText.title = "This Repo is licensed under the MIT license. This does not include the file 'qrcode.js' which is located in 'extension/js/'. The file is licensed under the MIT license by davidshimjs. For more information see this extensions GitHub repo: https://github.com/Samuel-Risner/qrcode-generator-browser-extension#readme";
@@ -208,7 +231,7 @@ function setDarkMode({ app, darkModeButton }: AllElements, isDark: boolean) {
     }
 }
 
-function addEvents(code: Code, url: string | undefined, savedUrls: SavedUrls, allElements: AllElements, { popupButton, saveUrlButton, darkModeButton, savedUrlsMenu, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, downloadSVGButton }: AllElements) {
+function addEvents(code: Code, url: string | undefined, savedUrls: SavedUrls, allElements: AllElements, { appContents, popupButton, saveUrlButton, darkModeButton, savedUrlsMenu, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, downloadSVGButton, darkColorInput, switchColorButton, lightColorInput }: AllElements) {
     popupButton.onclick = () => {
         browser.windows.create( { url: settings.popupHtml, type: "popup", width: window.innerWidth, height: window.innerHeight + 1 });
     }
@@ -289,24 +312,43 @@ function addEvents(code: Code, url: string | undefined, savedUrls: SavedUrls, al
     downloadSVGButton.onclick = () => {
         const svg = document.getElementsByTagName("svg")[0];
         const serializer = new XMLSerializer();
-        let source = serializer.serializeToString(svg);
-
-        if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
-            source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
-        }
-
-        if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)){
-            source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
-        }
-
-        source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
-
-        const url = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
+        const xml = serializer.serializeToString(svg);
+        const svg64 = btoa(xml);
+        const b64Start = "data:image/svg+xml;base64,";
+        const downloadUrl = b64Start + svg64;
 
         const a = document.createElement("a");
-        a.download = "QRCode.svg";
-        a.href = url;
+        a.download = "QRCode";
+        a.href = downloadUrl;
         a.click();
+    }
+
+    darkColorInput.oninput = async () => {
+        darkColorInput.style.borderColor = darkColorInput.value;
+        code.setStuff({ colorDark: darkColorInput.value });
+        const message: SetDarkColorMessage = { type: MessageTypes.SetDarkColor, color: darkColorInput.value };
+        await browser.runtime.sendMessage(message);
+    }
+
+    lightColorInput.oninput = async () => {
+        lightColorInput.style.borderColor = lightColorInput.value;
+        code.setStuff({ colorLight: lightColorInput.value });
+        const message: SetLightColorMessage = { type: MessageTypes.SetLightColor, color: lightColorInput.value };
+        await browser.runtime.sendMessage(message);
+    }
+
+    switchColorButton.onclick = async () => {
+        const colorTemp = darkColorInput.value;
+        darkColorInput.value = lightColorInput.value;
+        lightColorInput.value = colorTemp;
+
+        darkColorInput.style.borderColor = darkColorInput.value;
+        lightColorInput.style.borderColor = lightColorInput.value;
+
+        code.setStuff({ colorDark: darkColorInput.value, colorLight: lightColorInput.value });
+
+        const message: SetDarkAndLightColorMessage = { type: MessageTypes.SetDarkAndLightColor, colorDark: darkColorInput.value, colorLight: lightColorInput.value };
+        await browser.runtime.sendMessage(message);
     }
 }
 
@@ -329,8 +371,8 @@ async function main() {
     const code = new Code(url, allElements.qrCode, qrSettingsAndDarkMode);
     const savedUrls = new SavedUrls((url: string) => { addSavedUrl(url, allElements, code); }, allElements.savedUrlsMenu);
 
-    setStyles(url, qrSettingsAndDarkMode.correctLevel, allElements, allElements);
-    setText(url, allElements);
+    setStyles(url, qrSettingsAndDarkMode.correctLevel, qrSettingsAndDarkMode.colorDark, qrSettingsAndDarkMode.colorLight, allElements, allElements);
+    setText(url, qrSettingsAndDarkMode.colorDark, qrSettingsAndDarkMode.colorLight, allElements);
     addEvents(code, url, savedUrls, allElements, allElements);
     setDarkMode(allElements, qrSettingsAndDarkMode.isDark);
 
