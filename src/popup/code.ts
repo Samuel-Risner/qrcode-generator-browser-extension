@@ -20,7 +20,6 @@ export default class Code {
     private correctLevel: CorrectLevel;
     private colorDark: string;
     private colorLight: string;
-    private useSvg: boolean;
 
     constructor(url: string | undefined, private container: HTMLDivElement, { correctLevel=settings.default.correctLevel, colorDark=settings.default.colorDark, colorLight=settings.default.colorLight }: OptionArgs) {
         this.subContainer = document.createElement("div");
@@ -29,7 +28,6 @@ export default class Code {
         this.correctLevel = correctLevel;
         this.colorDark = colorDark;
         this.colorLight = colorLight;
-        this.useSvg = settings.default.useSvg;
 
         if (url === undefined) {
             this.url = "";
@@ -50,7 +48,7 @@ export default class Code {
 
     private createQrCode() {
         // @ts-ignore
-        this.qr = new QRCode(this.subContainer, { text: this.url, correctLevel: this.correctLevel, colorDark: this.colorDark, colorLight: this.colorLight, useSVG: this.useSvg });
+        this.qr = new QRCode(this.subContainer, { text: this.url, correctLevel: this.correctLevel, colorDark: this.colorDark, colorLight: this.colorLight, useSVG: settings.default.useSvg });
         this.qr.clear();
         this.qr.makeCode(this.url);
     }
