@@ -6,7 +6,7 @@ const settings =  {
         colorDark: "#000000",
         colorLight: "#ffffff"
     },
-    popupHtml: "html/popup.html"
+    popupHtml: "/html/popup.html"
 }
 
 export default settings;
