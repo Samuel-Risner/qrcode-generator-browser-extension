@@ -19,8 +19,11 @@ type AllElements = {
                     customPageButton: HTMLButtonElement;
                 saveUrlButton: HTMLButtonElement;
             input: HTMLInputElement;
-            qrCodeCorrectLevel: HTMLInputElement;
-            qrCodeCorrectLevelDataList: HTMLDataListElement;
+            qrCodeCorrectLevelContainer: HTMLDivElement;
+                qrCodeCorrectLevelLButton: HTMLButtonElement;
+                qrCodeCorrectLevelMButton: HTMLButtonElement;
+                qrCodeCorrectLevelQButton: HTMLButtonElement;
+                qrCodeCorrectLevelHButton: HTMLButtonElement;
             licensingText: HTMLAnchorElement;
 }
 
@@ -41,13 +44,16 @@ function createAndGetElements(): AllElements {
                         customPageButton: document.createElement("button"),
                     saveUrlButton: document.createElement("button"),
                 input: document.createElement("input"),
-                qrCodeCorrectLevel: document.createElement("input"),
-                qrCodeCorrectLevelDataList: document.createElement("datalist"),
+                qrCodeCorrectLevelContainer: document.createElement("div"),
+                    qrCodeCorrectLevelLButton: document.createElement("button"),
+                    qrCodeCorrectLevelMButton: document.createElement("button"),
+                    qrCodeCorrectLevelQButton: document.createElement("button"),
+                    qrCodeCorrectLevelHButton: document.createElement("button"),
                 licensingText: document.createElement("a")
     }
 }
 
-function combineElements({ app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, buttonContainer, thisPageButton, customPageButton, savedUrlsButton, input, qrCodeCorrectLevel, qrCodeCorrectLevelDataList, licensingText }: AllElements) {
+function combineElements({ app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, buttonContainer, thisPageButton, customPageButton, savedUrlsButton, input, qrCodeCorrectLevelContainer, qrCodeCorrectLevelLButton, qrCodeCorrectLevelMButton, qrCodeCorrectLevelQButton, qrCodeCorrectLevelHButton, licensingText }: AllElements) {
     app.appendChild(appContents);
         appContents.appendChild(topBar);
             topBar.appendChild(popupButton);
@@ -62,8 +68,11 @@ function combineElements({ app, appContents, topBar, popupButton, popupImage, sa
                 buttonContainer.appendChild(customPageButton);
             urlOptionsContainer.appendChild(saveUrlButton);
         appContents.appendChild(input);
-        appContents.appendChild(qrCodeCorrectLevel);
-        appContents.appendChild(qrCodeCorrectLevelDataList);
+        appContents.appendChild(qrCodeCorrectLevelContainer);
+            qrCodeCorrectLevelContainer.appendChild(qrCodeCorrectLevelLButton);
+            qrCodeCorrectLevelContainer.appendChild(qrCodeCorrectLevelMButton);
+            qrCodeCorrectLevelContainer.appendChild(qrCodeCorrectLevelQButton);
+            qrCodeCorrectLevelContainer.appendChild(qrCodeCorrectLevelHButton);
         appContents.appendChild(licensingText);
 }
 
@@ -75,7 +84,15 @@ function _setStyleButtonUnselected(el: HTMLButtonElement) {
     el.className = "py-1 px-2 rounded-full bg-transparent";
 }
 
-function setStyles(url: string | undefined, { app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, buttonContainer, thisPageButton, customPageButton, savedUrlsButton, input, qrCodeCorrectLevel, qrCodeCorrectLevelDataList, licensingText }: AllElements) {
+function _setStyleCorrectLevelButtonSelected(el: HTMLButtonElement) {
+    el.className = "py-1 px-3 rounded-full bg-neutral-100 dark:bg-slate-500";
+}
+
+function _setStyleCorrectLevelButtonUnselected(el: HTMLButtonElement) {
+    el.className = "py-1 px-3 rounded-full bg-transparent";
+}
+
+function setStyles(url: string | undefined, { app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, buttonContainer, thisPageButton, customPageButton, savedUrlsButton, input, qrCodeCorrectLevelContainer, qrCodeCorrectLevelLButton, qrCodeCorrectLevelMButton, qrCodeCorrectLevelQButton, qrCodeCorrectLevelHButton, licensingText }: AllElements) {
     appContents.className = "bg-gray-100 dark:bg-zinc-800 grid grid-cols-1 gap-2 break-words w-80 text-center p-4";
         topBar.className = "flex flex-row h-8";
             popupButton.className = "w-7";
@@ -89,7 +106,7 @@ function setStyles(url: string | undefined, { app, appContents, topBar, popupBut
             saveUrlButton.className = "mx-auto text-2xl";
         input.className = "text-center rounded-full p-2 bg-neutral-200 dark:bg-slate-600 text-black dark:text-neutral-200  disabled:text-neutral-400 dark:disabled:text-gray-500 dark:disabled:bg-slate-700";
         input.disabled = true;
-        qrCodeCorrectLevelDataList.className = "flex flex-row justify-between text-sm ml-2 mr-1 text-black dark:text-neutral-200";
+        qrCodeCorrectLevelContainer.className = "p-1 rounded-full bg-neutral-300 w-fit dark:bg-slate-600 text-black dark:text-neutral-200";
         licensingText.className = "text-sky-600 dark:text-sky-700 text-sm underline decoration-dashed";
 
     if (url === undefined) {
@@ -100,60 +117,45 @@ function setStyles(url: string | undefined, { app, appContents, topBar, popupBut
         _setStyleButtonSelected(thisPageButton);
         _setStyleButtonUnselected(customPageButton);
     }
+
+    _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelLButton);
+    _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelMButton);
+    _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelQButton);
+    _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelHButton);
 }
 
-function setQrCodeCorrectLevelDatalistEntries(datalist: HTMLDataListElement) {
-    let option = document.createElement("option");
-    option.value = "0";
-    option.label = "L";
-    datalist.appendChild(option);
+function setText(url: string | undefined, { app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, buttonContainer, thisPageButton, customPageButton, savedUrlsButton, input, qrCodeCorrectLevelContainer, qrCodeCorrectLevelLButton, qrCodeCorrectLevelMButton, qrCodeCorrectLevelQButton, qrCodeCorrectLevelHButton, licensingText }: AllElements) {
+    popupButton.title = "Pop out to a new window";
 
-    option = document.createElement("option");
-    option.value = "1";
-    option.label = "M";
-    datalist.appendChild(option);
+    popupImage.src = "/assets/popup.svg";
 
-    option = document.createElement("option");
-    option.value = "2";
-    option.label = "Q";
-    datalist.appendChild(option);
-
-    option = document.createElement("option");
-    option.value = "3";
-    option.label = "H";
-    datalist.appendChild(option);
-}
-
-function setText(aE: AllElements, url: string | undefined) {
-    aE.popupButton.title = "Pop out to a new window";
-
-    aE.popupImage.src = "assets/popup.svg";
-
-    aE.savedUrlsButton.textContent = "Saved URLs";
-    aE.savedUrlsButton.title = "Show saved URLs";
+    savedUrlsButton.textContent = "Saved URLs";
+    savedUrlsButton.title = "Show saved URLs";
     
-    aE.thisPageButton.textContent = "This Page";
+    thisPageButton.textContent = "This Page";
 
-    aE.customPageButton.textContent = "Custom Page";
+    customPageButton.textContent = "Custom Page";
     
-    aE.saveUrlButton.textContent = "📂";
-    aE.saveUrlButton.title = "Save URL";
+    saveUrlButton.textContent = "📂";
+    saveUrlButton.title = "Save URL";
+
+    qrCodeCorrectLevelLButton.textContent = "L";
+    qrCodeCorrectLevelLButton.title = "Low";
+
+    qrCodeCorrectLevelMButton.textContent = "M";
+    qrCodeCorrectLevelMButton.title = "Medium";
+
+    qrCodeCorrectLevelQButton.textContent = "Q";
+    qrCodeCorrectLevelQButton.title = "Quality";
+
+    qrCodeCorrectLevelHButton.textContent = "H";
+    qrCodeCorrectLevelHButton.title = "High";
     
-    if (url !== undefined) aE.input.value = url;
+    if (url !== undefined) input.value = url;
 
-    aE.qrCodeCorrectLevel.type = "range";
-    aE.qrCodeCorrectLevel.min = String(0);
-    aE.qrCodeCorrectLevel.max = String(3);
-    aE.qrCodeCorrectLevel.value = "0";
-    aE.qrCodeCorrectLevel.setAttribute("list", "setQrCodeCorrectLevelDatalistEntriesId");
-
-    aE.qrCodeCorrectLevelDataList.id = "setQrCodeCorrectLevelDatalistEntriesId";
-
-    setQrCodeCorrectLevelDatalistEntries(aE.qrCodeCorrectLevelDataList);
-
-    aE.licensingText.textContent = "About license";
-    aE.licensingText.href = "https://github.com/Samuel-Risner/qrcode-generator-browser-extension#readme";
-    aE.licensingText.title = "This Repo is licensed under the MIT license. This does not include the file 'qrcode.js' which is located in 'extension/js/'. The file is licensed under the MIT license by davidshimjs. For more information see this extensions GitHub repo: https://github.com/Samuel-Risner/qrcode-generator-browser-extension#readme";
+    licensingText.textContent = "About license";
+    licensingText.href = "https://github.com/Samuel-Risner/qrcode-generator-browser-extension#readme";
+    licensingText.title = "This Repo is licensed under the MIT license. This does not include the file 'qrcode.js' which is located in 'extension/js/'. The file is licensed under the MIT license by davidshimjs. For more information see this extensions GitHub repo: https://github.com/Samuel-Risner/qrcode-generator-browser-extension#readme";
 }
 
 function setDarkMode(aE: AllElements, isDark: boolean) {
@@ -216,10 +218,6 @@ function addEvents(aE: AllElements, qrCode: any, url: string | undefined, savedU
             setDarkMode(aE, res.isDark);
         });
     }
-
-    aE.qrCodeCorrectLevel.oninput = () => {
-        aE.qrCodeCorrectLevel.title = String(aE.qrCodeCorrectLevel.value);
-    }
 }
 
 function addSavedUrl(url: string, aE: AllElements, qrCode: any) {
@@ -240,9 +238,9 @@ async function main() {
 
     const qrCode = new Code(url, allElements.qrCode, {});
     const savedUrls = new SavedUrls((url: string) => { addSavedUrl(url, allElements, qrCode); }, allElements.savedUrlsMenu);
-    
+
     setStyles(url, allElements);
-    setText(allElements, url);
+    setText(url, allElements);
     addEvents(allElements, qrCode, url, savedUrls);
 
     const msg: GetDarkModeMessage = { type: MessageTypes.GetDarkMode };
