@@ -10,7 +10,7 @@
 
   "browser_action": {
     "default_title": "QRcode Generator",
-    "default_popup": "popup.html"
+    "default_popup": "html/popup.html"
   },
 
   "permissions": [
