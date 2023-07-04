@@ -2,6 +2,8 @@ import Code from "./code";
 import SavedUrls from "./savedUrls";
 import { AddUrlMessage, AddUrlResponse, GetDarkModeMessage, GetDarkModeResponse, GetUrlsMessage, GetUrlsResponse, ToggleDarkModeMessage, ToggleDarkModeResponse } from "./../shared/types";
 import { MessageTypes } from "./../shared/messageTypes";
+import settings from "../shared/settings";
+import { CorrectLevel } from "../shared/correctLevel";
 
 type AllElements = {
     app: HTMLDivElement;
@@ -170,53 +172,83 @@ function setDarkMode(aE: AllElements, isDark: boolean) {
     }
 }
 
-function addEvents(aE: AllElements, qrCode: any, url: string | undefined, savedUrls: SavedUrls) {
-    aE.input.oninput = () => {
-        qrCode.clear();
-        qrCode.makeCode(aE.input.value);
+function addEvents(qrCode: Code, url: string | undefined, savedUrls: SavedUrls, allElements: AllElements, { app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, urlOptionsContainer, buttonContainer, thisPageButton, customPageButton, savedUrlsButton, input, qrCodeCorrectLevelContainer, qrCodeCorrectLevelLButton, qrCodeCorrectLevelMButton, qrCodeCorrectLevelQButton, qrCodeCorrectLevelHButton, licensingText }: AllElements) {
+    popupButton.onclick = () => {
+        browser.windows.create( { url: settings.popupHtml, type: "popup", width: window.innerWidth, height: window.innerHeight + 1 });
     }
 
-    if (url !== undefined) {
-        aE.thisPageButton.onclick = () => {
-            _setStyleButtonSelected(aE.thisPageButton);
-            _setStyleButtonUnselected(aE.customPageButton);
-            aE.input.disabled = true;
-            aE.input.value = url;
-            qrCode.clear();
-            qrCode.makeCode(url);
-        }
-
-        aE.customPageButton.onclick = () => {
-            _setStyleButtonSelected(aE.customPageButton);
-            _setStyleButtonUnselected(aE.thisPageButton);
-            aE.input.disabled = false;
-        }
-    }
-
-    aE.popupButton.onclick = () => {
-        browser.windows.create( { url: "popup.html", type: "popup", width: window.innerWidth, height: window.innerHeight + 1 });
-    }
-
-    aE.saveUrlButton.onclick = () => {
-        const msg: AddUrlMessage = { type: MessageTypes.AddUrl, url: aE.input.value };
+    saveUrlButton.onclick = () => {
+        const msg: AddUrlMessage = { type: MessageTypes.AddUrl, url: input.value };
         browser.runtime.sendMessage(msg).then((res: AddUrlResponse) => {
             savedUrls.setUrls(res.urls, res.urlVersion);
         });
     }
 
-    aE.savedUrlsButton.onclick = () => {
+    darkModeButton.onclick = async () => {
+        const msg: ToggleDarkModeMessage = { type: MessageTypes.ToggleDarkMode };
+        browser.runtime.sendMessage(msg).then((res: ToggleDarkModeResponse) => {
+            setDarkMode(allElements, res.isDark);
+        });
+    }
+
+    savedUrlsButton.onclick = () => {
         const msg: GetUrlsMessage = { type: MessageTypes.GetUrls };
         browser.runtime.sendMessage(msg).then((res: GetUrlsResponse) => {
             savedUrls.setUrls(res.urls, res.urlVersion);
         });
-        aE.savedUrlsMenu.hidden = !aE.savedUrlsMenu.hidden;
+        savedUrlsMenu.hidden = !savedUrlsMenu.hidden;
     }
 
-    aE.darkModeButton.onclick = async () => {
-        const msg: ToggleDarkModeMessage = { type: MessageTypes.ToggleDarkMode };
-        browser.runtime.sendMessage(msg).then((res: ToggleDarkModeResponse) => {
-            setDarkMode(aE, res.isDark);
-        });
+    if (url !== undefined) {
+        thisPageButton.onclick = () => {
+            _setStyleButtonSelected(thisPageButton);
+            _setStyleButtonUnselected(customPageButton);
+            input.disabled = true;
+            input.value = url;
+            qrCode.createCode(url);
+        }
+
+        customPageButton.onclick = () => {
+            _setStyleButtonSelected(customPageButton);
+            _setStyleButtonUnselected(thisPageButton);
+            input.disabled = false;
+        }
+    }
+
+    input.oninput = () => {
+        qrCode.createCode(input.value);
+    }
+
+    qrCodeCorrectLevelLButton.onclick = () => {
+        _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelLButton);
+        _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelMButton);
+        _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelQButton);
+        _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelHButton);
+        qrCode.setStuff({ correctLevel: CorrectLevel.L })
+    }
+
+    qrCodeCorrectLevelMButton.onclick = () => {
+        _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelLButton);
+        _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelMButton);
+        _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelQButton);
+        _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelHButton);
+        qrCode.setStuff({ correctLevel: CorrectLevel.M })
+    }
+
+    qrCodeCorrectLevelQButton.onclick = () => {
+        _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelLButton);
+        _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelMButton);
+        _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelQButton);
+        _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelHButton);
+        qrCode.setStuff({ correctLevel: CorrectLevel.Q })
+    }
+
+    qrCodeCorrectLevelHButton.onclick = () => {
+        _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelLButton);
+        _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelMButton);
+        _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelQButton);
+        _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelHButton);
+        qrCode.setStuff({ correctLevel: CorrectLevel.H })
     }
 }
 
@@ -241,7 +273,7 @@ async function main() {
 
     setStyles(url, allElements);
     setText(url, allElements);
-    addEvents(allElements, qrCode, url, savedUrls);
+    addEvents(qrCode, url, savedUrls, allElements, allElements);
 
     const msg: GetDarkModeMessage = { type: MessageTypes.GetDarkMode };
     browser.runtime.sendMessage(msg).then((res: GetDarkModeResponse) => {

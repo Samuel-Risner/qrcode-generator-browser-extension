@@ -1,6 +1,5 @@
 import settings from "../shared/settings";
-
-export type CorrectLevel = 0 | 1 | 2 | 3;
+import { CorrectLevel } from "../shared/correctLevel";
 
 type Args2 = {
     correctLevel?: CorrectLevel;

@@ -1,6 +1,5 @@
+import { CorrectLevel } from "./correctLevel";
 import { MessageTypes } from "./messageTypes";
-
-export type CorrectLevel = 0 | 1 | 2 | 3;
 
 export interface BasicMessage {
     type: MessageTypes;

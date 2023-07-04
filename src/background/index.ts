@@ -1,7 +1,7 @@
 import { AddUrlMessage, AddUrlResponse, BasicMessage, GetDarkModeResponse, GetQrSettingsResponse, GetUrlsResponse, RemoveUrlMessage, RemoveUrlResponse, ToggleDarkModeResponse } from "../shared/types";
 import { MessageTypes } from "../shared/messageTypes";
 import { removeElementFromArray } from "../shared/misc";
-import { CorrectLevel } from "../popup/code";
+import { CorrectLevel } from "../shared/correctLevel";
 import settings from "../shared/settings";
 
 type SavedData = {
