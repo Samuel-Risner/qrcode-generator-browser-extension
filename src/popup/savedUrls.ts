@@ -31,17 +31,17 @@ export default class SavedUrls {
         const container = document.createElement("div");
         const deleteButton = document.createElement("button");
         const applyButton = document.createElement("button");
-        const textDiv = document.createElement("input");
+        const urlDisplay = document.createElement("input");
 
         this.subParent.appendChild(container);
         container.appendChild(deleteButton);
-        container.appendChild(textDiv);
+        container.appendChild(urlDisplay);
         container.appendChild(applyButton);
 
         container.className = "flex flex-row bg-neutral-200 p-2 rounded-full dark:bg-slate-500 text-black dark:text-neutral-200";
-        textDiv.value = url;
-        textDiv.disabled = true;
-        textDiv.className = "w-44 mx-auto bg-transparent text-center";
+        urlDisplay.value = url;
+        urlDisplay.disabled = true;
+        urlDisplay.className = "w-44 mx-auto bg-transparent text-center";
         deleteButton.className = "text-lg";
         deleteButton.textContent = "🗑";
         deleteButton.title = "Remove URL";
