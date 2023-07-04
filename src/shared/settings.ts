@@ -1,6 +1,8 @@
+import { CorrectLevel } from "./types";
+
 const settings =  {
-    Qr: {
-        correctLevel: 0,
+    default: {
+        correctLevel: 0 as CorrectLevel,
         colorDark: "#000000",
         colorLight: "#ffffff"
     }

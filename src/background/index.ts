@@ -2,6 +2,7 @@ import { AddUrlMessage, AddUrlResponse, BasicMessage, GetDarkModeResponse, GetQr
 import { MessageTypes } from "./../shared/messageTypes";
 import { removeElementFromArray } from "./../shared/misc";
 import { CorrectLevel } from "./../popup/code";
+import settings from "../shared/settings";
 
 type SavedData = {
     urls: string[];
@@ -13,7 +14,14 @@ type SavedData = {
 }
 
 browser.runtime.onInstalled.addListener(() => {
-    const data: SavedData = { urls: [], urlVersion: 0, isDark: false, correctLevel: 0, colorDark: "#000000", colorLight: "#ffffff" };
+    const data: SavedData = {
+        urls: [],
+        urlVersion: 0,
+        isDark: false,
+        correctLevel: settings.default.correctLevel,
+        colorDark: settings.default.colorDark,
+        colorLight: settings.default.colorLight
+    };
     browser.storage.local.set(data);
 });
 
