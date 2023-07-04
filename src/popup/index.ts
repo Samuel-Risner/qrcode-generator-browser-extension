@@ -28,6 +28,8 @@ type AllElements = {
                     correctLevelMButton: HTMLButtonElement;
                     correctLevelQButton: HTMLButtonElement;
                     correctLevelHButton: HTMLButtonElement;
+            downloadContainer: HTMLDivElement;
+                downloadSVGButton: HTMLButtonElement;
             licensingText: HTMLAnchorElement;
 }
 
@@ -55,11 +57,13 @@ function createAndGetElements(): AllElements {
                         correctLevelMButton: document.createElement("button"),
                         correctLevelQButton: document.createElement("button"),
                         correctLevelHButton: document.createElement("button"),
+                downloadContainer: document.createElement("div"),
+                    downloadSVGButton: document.createElement("button"),
                 licensingText: document.createElement("a")
     }
 }
 
-function combineElements({ app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, pageButtonContainer, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelContainer, correctLevelDescription, correctLevelButtonContainer, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, licensingText }: AllElements) {
+function combineElements({ app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, pageButtonContainer, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelContainer, correctLevelDescription, correctLevelButtonContainer, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, downloadContainer, downloadSVGButton, licensingText }: AllElements) {
     app.appendChild(appContents);
         appContents.appendChild(topBar);
             topBar.appendChild(popupButton);
@@ -81,6 +85,8 @@ function combineElements({ app, appContents, topBar, popupButton, popupImage, sa
                 correctLevelButtonContainer.appendChild(correctLevelMButton);
                 correctLevelButtonContainer.appendChild(correctLevelQButton);
                 correctLevelButtonContainer.appendChild(correctLevelHButton);
+        appContents.appendChild(downloadContainer);
+            downloadContainer.appendChild(downloadSVGButton);
         appContents.appendChild(licensingText);
 }
 
@@ -107,7 +113,7 @@ function _setStylesCorrectLevelButtonUnselected({ correctLevelLButton, correctLe
     _setStyleCorrectLevelButtonUnselected(correctLevelHButton);
 }
 
-function setStyles(url: string | undefined, correctLevel: CorrectLevel, allElements: AllElements, { appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, pageButtonContainer, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelContainer, correctLevelDescription, correctLevelButtonContainer, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, licensingText }: AllElements) {
+function setStyles(url: string | undefined, correctLevel: CorrectLevel, allElements: AllElements, { appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, pageButtonContainer, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelContainer, correctLevelDescription, correctLevelButtonContainer, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, downloadContainer, downloadSVGButton, licensingText }: AllElements) {
     appContents.className = "bg-gray-100 dark:bg-zinc-800 grid grid-cols-1 gap-2 break-words w-80 text-center p-4";
         topBar.className = "flex flex-row h-8";
             popupButton.className = "w-7";
@@ -117,12 +123,14 @@ function setStyles(url: string | undefined, correctLevel: CorrectLevel, allEleme
         savedUrlsMenu.hidden = true;
         qrCode.className = "m-auto";
         urlOptionsContainer.className = "flex flex-row";
-            pageButtonContainer.className = "p-1 rounded-full bg-neutral-300 w-fit dark:bg-slate-600 text-black dark:text-neutral-200";
+            pageButtonContainer.className = "p-1 rounded-full bg-neutral-300 dark:bg-slate-600 text-black dark:text-neutral-200";
             saveUrlButton.className = "mx-auto text-2xl";
         input.className = "text-center rounded-full p-2 bg-neutral-200 dark:bg-slate-600 text-black dark:text-neutral-200  disabled:text-neutral-400 dark:disabled:text-gray-500 dark:disabled:bg-slate-700";
         correctLevelContainer.className = "flex flex-row";
             correctLevelDescription.className = "flex m-auto text-black dark:text-neutral-200";
-            correctLevelButtonContainer.className = "p-1 rounded-full bg-neutral-300 w-fit dark:bg-slate-600 text-black dark:text-neutral-200";
+            correctLevelButtonContainer.className = "p-1 rounded-full bg-neutral-300 dark:bg-slate-600 text-black dark:text-neutral-200";
+        downloadContainer.className = "flex flex-row m-auto";
+            downloadSVGButton.className = "py-1 px-2 rounded-full bg-neutral-300 dark:bg-slate-600 text-black dark:text-neutral-200";
         licensingText.className = "text-sky-600 dark:text-sky-400 text-sm underline decoration-dashed w-fit m-auto";
     
     input.disabled = true;
@@ -149,7 +157,7 @@ function setStyles(url: string | undefined, correctLevel: CorrectLevel, allEleme
     }
 }
 
-function setText(url: string | undefined, { popupButton, popupImage, saveUrlButton, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelDescription, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, licensingText }: AllElements) {
+function setText(url: string | undefined, { popupButton, popupImage, saveUrlButton, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelDescription, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, licensingText, downloadSVGButton }: AllElements) {
     popupButton.title = "Pop out to a new window";
 
     popupImage.src = "/assets/popup.svg";
@@ -180,6 +188,9 @@ function setText(url: string | undefined, { popupButton, popupImage, saveUrlButt
 
     correctLevelDescription.textContent = "correct level:";
 
+    downloadSVGButton.textContent = ".svg";
+    downloadSVGButton.title = "Download SVG file";
+
     licensingText.textContent = "About license";
     licensingText.href = "https://github.com/Samuel-Risner/qrcode-generator-browser-extension#readme";
     licensingText.title = "This Repo is licensed under the MIT license. This does not include the file 'qrcode.js' which is located in 'extension/js/'. The file is licensed under the MIT license by davidshimjs. For more information see this extensions GitHub repo: https://github.com/Samuel-Risner/qrcode-generator-browser-extension#readme";
@@ -197,7 +208,7 @@ function setDarkMode({ app, darkModeButton }: AllElements, isDark: boolean) {
     }
 }
 
-function addEvents(code: Code, url: string | undefined, savedUrls: SavedUrls, allElements: AllElements, { popupButton, saveUrlButton, darkModeButton, savedUrlsMenu, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton }: AllElements) {
+function addEvents(code: Code, url: string | undefined, savedUrls: SavedUrls, allElements: AllElements, { popupButton, saveUrlButton, darkModeButton, savedUrlsMenu, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, downloadSVGButton }: AllElements) {
     popupButton.onclick = () => {
         browser.windows.create( { url: settings.popupHtml, type: "popup", width: window.innerWidth, height: window.innerHeight + 1 });
     }
@@ -273,6 +284,29 @@ function addEvents(code: Code, url: string | undefined, savedUrls: SavedUrls, al
         const message: SetCorrectLevelMessage = { type: MessageTypes.SetCorrectLevel, correctLevel: CorrectLevel.H };
         await browser.runtime.sendMessage(message);
         code.setStuff({ correctLevel: CorrectLevel.H });
+    }
+
+    downloadSVGButton.onclick = () => {
+        const svg = document.getElementsByTagName("svg")[0];
+        const serializer = new XMLSerializer();
+        let source = serializer.serializeToString(svg);
+
+        if(!source.match(/^<svg[^>]+xmlns="http\:\/\/www\.w3\.org\/2000\/svg"/)){
+            source = source.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+        }
+
+        if(!source.match(/^<svg[^>]+"http\:\/\/www\.w3\.org\/1999\/xlink"/)){
+            source = source.replace(/^<svg/, '<svg xmlns:xlink="http://www.w3.org/1999/xlink"');
+        }
+
+        source = '<?xml version="1.0" standalone="no"?>\r\n' + source;
+
+        const url = "data:image/svg+xml;charset=utf-8,"+encodeURIComponent(source);
+
+        const a = document.createElement("a");
+        a.download = "QRCode.svg";
+        a.href = url;
+        a.click();
     }
 }
 
