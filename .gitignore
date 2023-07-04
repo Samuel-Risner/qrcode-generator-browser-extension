@@ -2,5 +2,5 @@
 node_modules/
 extension.zip
 
-js/dist/
-css/dist/
+extension/js/dist/
+extension/css/dist/
