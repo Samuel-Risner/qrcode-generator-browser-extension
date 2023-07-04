@@ -17,7 +17,7 @@ browser.runtime.onInstalled.addListener(() => {
     const data: SavedData = {
         urls: [],
         urlVersion: 0,
-        isDark: false,
+        isDark: settings.default.isDark,
         correctLevel: settings.default.correctLevel,
         colorDark: settings.default.colorDark,
         colorLight: settings.default.colorLight
@@ -25,25 +25,25 @@ browser.runtime.onInstalled.addListener(() => {
     browser.storage.local.set(data);
 });
 
-async function addUrl(sendResponse: (response: AddUrlResponse) => void, url: string) {
+async function addUrl(sendResponse: (response: AddUrlResponse) => void, message: AddUrlMessage) {
     const data = (await browser.storage.local.get()) as SavedData;
-    data.urls.push(url);
+    data.urls.push(message.url);
     data.urlVersion += 1;
     await browser.storage.local.set(data);
-    sendResponse(data);
+    sendResponse({ urls: data.urls, urlVersion: data.urlVersion });
 }
 
 async function getUrls(sendResponse: (response: GetUrlsResponse) => void) {
     const data = (await browser.storage.local.get()) as SavedData;
-    sendResponse(data);
+    sendResponse({ urls: data.urls, urlVersion: data.urlVersion });
 }
 
-async function removeUrl(sendResponse: (response: RemoveUrlResponse) => void, url: string) {
+async function removeUrl(sendResponse: (response: RemoveUrlResponse) => void, message: RemoveUrlMessage) {
     const data = (await browser.storage.local.get()) as SavedData;
-    removeElementFromArray(data.urls, url);
+    removeElementFromArray(data.urls, message.url);
     data.urlVersion += 1;
     await browser.storage.local.set(data);
-    sendResponse(data);
+    sendResponse({ urls: data.urls, urlVersion: data.urlVersion });
 }
 
 async function toggleDarkMode(sendResponse: (response: ToggleDarkModeResponse) => void) {
@@ -53,9 +53,9 @@ async function toggleDarkMode(sendResponse: (response: ToggleDarkModeResponse) =
     sendResponse( { isDark: data.isDark });
 }
 
-async function setCorrectLevel(sendResponse: (response: SetCorrectLevelResponse) => void, correctLevel: CorrectLevel) {
+async function setCorrectLevel(sendResponse: (response: SetCorrectLevelResponse) => void, message: SetCorrectLevelMessage) {
     const data = (await browser.storage.local.get()) as SavedData;
-    data.correctLevel = correctLevel;
+    data.correctLevel = message.correctLevel;
     await browser.storage.local.set(data);
     sendResponse({});
 }
@@ -65,29 +65,32 @@ async function getQrSettingsAndDarkMode(sendResponse: (response: GetQrSettingsAn
     sendResponse({ isDark: data.isDark, colorDark: data.colorDark, colorLight: data.colorLight, correctLevel: data.correctLevel });
 }
 
-async function setDarkColor(sendResponse: (response: SetDarkColorResponse) => void, color: string) {
+async function setDarkColor(sendResponse: (response: SetDarkColorResponse) => void, message: SetDarkColorMessage) {
     const data = (await browser.storage.local.get()) as SavedData;
-    data.colorDark = color;
+    data.colorDark = message.color;
     await browser.storage.local.set(data);
+    sendResponse({});
 }
 
-async function setLightColor(sendResponse: (response: SetLightColorResponse) => void, color: string) {
+async function setLightColor(sendResponse: (response: SetLightColorResponse) => void, message: SetLightColorMessage) {
     const data = (await browser.storage.local.get()) as SavedData;
-    data.colorLight = color;
+    data.colorLight = message.color;
     await browser.storage.local.set(data);
+    sendResponse({});
 }
 
-async function setDarkAndLightColor(sendResponse: (response: SetDarkAndLightColorResponse) => void, colorDark: string, colorLight: string) {
+async function setDarkAndLightColor(sendResponse: (response: SetDarkAndLightColorResponse) => void, message: SetDarkAndLightColorMessage) {
     const data = (await browser.storage.local.get()) as SavedData;
-    data.colorDark = colorDark;
-    data.colorLight = colorLight;
+    data.colorDark = message.colorDark;
+    data.colorLight = message.colorLight;
     await browser.storage.local.set(data);
+    sendResponse({});
 }
 
 browser.runtime.onMessage.addListener((message: BasicMessage, sender: browser.runtime.MessageSender, sendResponse: (response?: any) => void) => {
     switch (message.type) {
         case MessageTypes.AddUrl:
-            addUrl(sendResponse, (message as AddUrlMessage).url);
+            addUrl(sendResponse, message as AddUrlMessage);
             break;
 
         case MessageTypes.GetUrls:
@@ -95,7 +98,7 @@ browser.runtime.onMessage.addListener((message: BasicMessage, sender: browser.ru
             break;
 
         case MessageTypes.RemoveUrl:
-            removeUrl(sendResponse, (message as RemoveUrlMessage).url);
+            removeUrl(sendResponse, message as RemoveUrlMessage);
             break;
 
         case MessageTypes.ToggleDarkMode:
@@ -103,7 +106,7 @@ browser.runtime.onMessage.addListener((message: BasicMessage, sender: browser.ru
             break;
 
         case MessageTypes.SetCorrectLevel:
-            setCorrectLevel(sendResponse, (message as SetCorrectLevelMessage).correctLevel);
+            setCorrectLevel(sendResponse, message as SetCorrectLevelMessage);
             break;
         
         case MessageTypes.GetQrSettingsAndDarkMode:
@@ -111,15 +114,15 @@ browser.runtime.onMessage.addListener((message: BasicMessage, sender: browser.ru
             break;
         
         case MessageTypes.SetDarkColor:
-            setDarkColor(sendResponse, (message as SetDarkColorMessage).color);
+            setDarkColor(sendResponse, message as SetDarkColorMessage);
             break;
 
         case MessageTypes.SetLightColor:
-            setLightColor(sendResponse, (message as SetLightColorMessage).color);
+            setLightColor(sendResponse, message as SetLightColorMessage);
             break;
         
         case MessageTypes.SetDarkAndLightColor:
-            setDarkAndLightColor(sendResponse, (message as SetDarkAndLightColorMessage).colorDark, (message as SetDarkAndLightColorMessage).colorLight);
+            setDarkAndLightColor(sendResponse, message as SetDarkAndLightColorMessage);
             break;
     }
 
