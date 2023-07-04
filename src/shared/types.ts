@@ -10,7 +10,7 @@ interface UrlResponse {
     urlVersion: number;
 }
 
-
+// ----- get urls ----- //
 
 export interface GetUrlsMessage extends BasicMessage {
     type: MessageTypes.GetUrls;
@@ -18,7 +18,7 @@ export interface GetUrlsMessage extends BasicMessage {
 
 export interface GetUrlsResponse extends UrlResponse {}
 
-
+// ----- add url ----- //
 
 export interface AddUrlMessage extends BasicMessage {
     type: MessageTypes.AddUrl;
@@ -27,7 +27,7 @@ export interface AddUrlMessage extends BasicMessage {
 
 export interface AddUrlResponse extends UrlResponse {}
 
-
+// ----- remove url ----- //
 
 export interface RemoveUrlMessage extends BasicMessage {
     type: MessageTypes.RemoveUrl;
@@ -36,7 +36,7 @@ export interface RemoveUrlMessage extends BasicMessage {
 
 export interface RemoveUrlResponse extends UrlResponse {}
 
-
+// ----- toggle dark mode ----- //
 
 export interface ToggleDarkModeMessage extends BasicMessage {
     type: MessageTypes.ToggleDarkMode;
@@ -46,7 +46,7 @@ export interface ToggleDarkModeResponse {
     isDark: boolean;
 }
 
-
+// ----- set correct level ----- //
 
 export interface SetCorrectLevelMessage extends BasicMessage {
     type: MessageTypes.SetCorrectLevel;
@@ -55,7 +55,7 @@ export interface SetCorrectLevelMessage extends BasicMessage {
 
 export interface SetCorrectLevelResponse {}
 
-
+// ----- get qr-code settings ----- //
 
 export interface GetQrSettingsAndDarkModeMessage extends BasicMessage {
     type: MessageTypes.GetQrSettingsAndDarkMode;
@@ -68,7 +68,7 @@ export interface GetQrSettingsAndDarkModeResponse {
     colorLight: string;
 }
 
-
+// ----- set dark color ----- //
 
 export interface SetDarkColorMessage extends BasicMessage {
     type: MessageTypes.SetDarkColor;
@@ -77,7 +77,7 @@ export interface SetDarkColorMessage extends BasicMessage {
 
 export interface SetDarkColorResponse {}
 
-
+// -----  set light color----- //
 
 export interface SetLightColorMessage extends BasicMessage {
     type: MessageTypes.SetLightColor;
@@ -86,7 +86,7 @@ export interface SetLightColorMessage extends BasicMessage {
 
 export interface SetLightColorResponse {}
 
-
+// ----- set dark and light color ----- //
 
 export interface SetDarkAndLightColorMessage extends BasicMessage {
     type: MessageTypes.SetDarkAndLightColor;
