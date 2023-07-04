@@ -145,8 +145,6 @@ function setStyles(url: string | undefined, correctLevel: CorrectLevel, darkColo
             lightColorInput.className = darkColorInput.className;
         licensingText.className = "text-sky-600 dark:text-sky-400 text-sm underline decoration-dashed w-fit m-auto";
     
-    input.disabled = true;
-
     darkColorInput.style.borderColor = darkColor;
     lightColorInput.style.borderColor = lightColor;
 
@@ -154,9 +152,11 @@ function setStyles(url: string | undefined, correctLevel: CorrectLevel, darkColo
         _setStylePageButtonSelected(customPageButton);
         _setStylePageButtonUnselected(thisPageButton);
         thisPageButton.disabled = true;
+        customPageButton.disabled = true;
     } else {
         _setStylePageButtonSelected(thisPageButton);
         _setStylePageButtonUnselected(customPageButton);
+        input.disabled = true;
     }
 
     _setStylesCorrectLevelButtonUnselected(allElements);
