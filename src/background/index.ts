@@ -1,4 +1,4 @@
-import { AddUrlMessage, AddUrlResponse, BasicMessage, GetDarkModeResponse, GetQrSettingsResponse, GetUrlsResponse, RemoveUrlMessage, RemoveUrlResponse, ToggleDarkModeResponse } from "../shared/types";
+import { AddUrlMessage, AddUrlResponse, BasicMessage, GetDarkModeResponse, GetQrSettingsResponse, GetUrlsResponse, RemoveUrlMessage, RemoveUrlResponse, SetCorrectLevelMessage, SetCorrectLevelResponse, ToggleDarkModeResponse } from "../shared/types";
 import { MessageTypes } from "../shared/messageTypes";
 import { removeElementFromArray } from "../shared/misc";
 import { CorrectLevel } from "../shared/correctLevel";
@@ -63,19 +63,42 @@ async function getQrSettings(sendResponse: (response: GetQrSettingsResponse) => 
     sendResponse( { colorDark: data.colorDark, colorLight: data.colorLight, correctLevel: data.correctLevel });
 }
 
+async function setCorrectLevel(sendResponse: (response: SetCorrectLevelResponse) => void, correctLevel: CorrectLevel) {
+    const data = (await browser.storage.local.get()) as SavedData;
+    data.correctLevel = correctLevel;
+    browser.storage.local.set(data);
+    sendResponse({});
+}
+
 browser.runtime.onMessage.addListener((message: BasicMessage, sender: browser.runtime.MessageSender, sendResponse: (response?: any) => void) => {
-    if (message.type === MessageTypes.AddUrl) {
-        addUrl(sendResponse, (message as AddUrlMessage).url);
-    } else if (message.type === MessageTypes.GetUrls) {
-        getUrls(sendResponse);
-    } else if (message.type === MessageTypes.RemoveUrl) {
-        removeUrl(sendResponse, (message as RemoveUrlMessage).url);
-    } else if (message.type === MessageTypes.ToggleDarkMode) {
-        toggleDarkMode(sendResponse);
-    } else if (message.type === MessageTypes.GetDarkMode) {
-        getDarkMode(sendResponse);
-    } else if (message.type === MessageTypes.GetQrSettings) {
-        getQrSettings(sendResponse);
+    switch (message.type) {
+        case MessageTypes.AddUrl:
+            addUrl(sendResponse, (message as AddUrlMessage).url);
+            break;
+
+        case MessageTypes.GetUrls:
+            getUrls(sendResponse);
+            break;
+
+        case MessageTypes.RemoveUrl:
+            removeUrl(sendResponse, (message as RemoveUrlMessage).url);
+            break;
+
+        case MessageTypes.ToggleDarkMode:
+            toggleDarkMode(sendResponse);
+            break;
+
+        case MessageTypes.GetDarkMode:
+            getDarkMode(sendResponse);
+            break;
+
+        case MessageTypes.GetQrSettings:
+            getQrSettings(sendResponse);
+            break;
+
+        case MessageTypes.SetCorrectLevel:
+            setCorrectLevel(sendResponse, (message as SetCorrectLevelMessage).correctLevel);
+            break;
     }
 
     return true;

@@ -55,3 +55,10 @@ export interface GetQrSettingsResponse {
     colorDark: string;
     colorLight: string;
 }
+
+export interface SetCorrectLevelMessage extends BasicMessage {
+    type: MessageTypes.SetCorrectLevel;
+    correctLevel: CorrectLevel;
+}
+
+export interface SetCorrectLevelResponse {}

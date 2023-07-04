@@ -18,6 +18,7 @@ export default class Code {
 
     private subContainer: HTMLDivElement;
     private qr: any;
+
     private url: string;
 
     constructor(url: string | undefined, private container: HTMLDivElement, { correctLevel=settings.default.correctLevel, colorDark=settings.default.colorDark, colorLight=settings.default.colorLight }: Args2) {
@@ -34,6 +35,8 @@ export default class Code {
             this.qr = new QRCode(this.subContainer, { text: url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight });
             this.url = url;
         }
+
+        console.log(this.qr.correctLevel);
     }
 
     private resetQrCode() {
@@ -65,5 +68,9 @@ export default class Code {
         // @ts-ignore
         this.qr = new QRCode(this.subContainer, { text: url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight });
     }
+
+    // getCorrectLevel(): CorrectLevel {
+    //     return this.co
+    // }
     
 }

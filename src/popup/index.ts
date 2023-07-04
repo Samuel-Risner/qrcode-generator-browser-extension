@@ -1,6 +1,6 @@
 import Code from "./code";
 import SavedUrls from "./savedUrls";
-import { AddUrlMessage, AddUrlResponse, GetDarkModeMessage, GetDarkModeResponse, GetUrlsMessage, GetUrlsResponse, ToggleDarkModeMessage, ToggleDarkModeResponse } from "./../shared/types";
+import { AddUrlMessage, AddUrlResponse, GetDarkModeMessage, GetDarkModeResponse, GetQrSettingsMessage, GetQrSettingsResponse, GetUrlsMessage, GetUrlsResponse, SetCorrectLevelMessage, ToggleDarkModeMessage, ToggleDarkModeResponse } from "./../shared/types";
 import { MessageTypes } from "./../shared/messageTypes";
 import settings from "../shared/settings";
 import { CorrectLevel } from "../shared/correctLevel";
@@ -94,7 +94,7 @@ function _setStyleCorrectLevelButtonUnselected(el: HTMLButtonElement) {
     el.className = "py-1 px-3 rounded-full bg-transparent";
 }
 
-function setStyles(url: string | undefined, { app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, buttonContainer, thisPageButton, customPageButton, savedUrlsButton, input, qrCodeCorrectLevelContainer, qrCodeCorrectLevelLButton, qrCodeCorrectLevelMButton, qrCodeCorrectLevelQButton, qrCodeCorrectLevelHButton, licensingText }: AllElements) {
+function setStyles(url: string | undefined, code: Code, correctLevel: CorrectLevel, { app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, buttonContainer, thisPageButton, customPageButton, savedUrlsButton, input, qrCodeCorrectLevelContainer, qrCodeCorrectLevelLButton, qrCodeCorrectLevelMButton, qrCodeCorrectLevelQButton, qrCodeCorrectLevelHButton, licensingText }: AllElements) {
     appContents.className = "bg-gray-100 dark:bg-zinc-800 grid grid-cols-1 gap-2 break-words w-80 text-center p-4";
         topBar.className = "flex flex-row h-8";
             popupButton.className = "w-7";
@@ -120,10 +120,20 @@ function setStyles(url: string | undefined, { app, appContents, topBar, popupBut
         _setStyleButtonUnselected(customPageButton);
     }
 
-    _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelLButton);
+    _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelLButton);
     _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelMButton);
     _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelQButton);
     _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelHButton);
+
+    if (correctLevel === CorrectLevel.L) {
+        _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelLButton);
+    } else if (correctLevel === CorrectLevel.M) {
+        _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelMButton);
+    } else if (correctLevel === CorrectLevel.Q) {
+        _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelQButton);
+    } else if (correctLevel === CorrectLevel.H) {
+        _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelHButton);
+    }
 }
 
 function setText(url: string | undefined, { app, appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, buttonContainer, thisPageButton, customPageButton, savedUrlsButton, input, qrCodeCorrectLevelContainer, qrCodeCorrectLevelLButton, qrCodeCorrectLevelMButton, qrCodeCorrectLevelQButton, qrCodeCorrectLevelHButton, licensingText }: AllElements) {
@@ -219,36 +229,44 @@ function addEvents(qrCode: Code, url: string | undefined, savedUrls: SavedUrls, 
         qrCode.createCode(input.value);
     }
 
-    qrCodeCorrectLevelLButton.onclick = () => {
+    qrCodeCorrectLevelLButton.onclick = async () => {
         _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelLButton);
         _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelMButton);
         _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelQButton);
         _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelHButton);
-        qrCode.setStuff({ correctLevel: CorrectLevel.L })
+        const message: SetCorrectLevelMessage = { type: MessageTypes.SetCorrectLevel, correctLevel: CorrectLevel.L };
+        await browser.runtime.sendMessage(message);
+        qrCode.setStuff({ correctLevel: CorrectLevel.L });
     }
 
-    qrCodeCorrectLevelMButton.onclick = () => {
+    qrCodeCorrectLevelMButton.onclick = async () => {
         _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelLButton);
         _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelMButton);
         _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelQButton);
         _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelHButton);
-        qrCode.setStuff({ correctLevel: CorrectLevel.M })
+        const message: SetCorrectLevelMessage = { type: MessageTypes.SetCorrectLevel, correctLevel: CorrectLevel.M };
+        await browser.runtime.sendMessage(message);
+        qrCode.setStuff({ correctLevel: CorrectLevel.M });
     }
 
-    qrCodeCorrectLevelQButton.onclick = () => {
+    qrCodeCorrectLevelQButton.onclick = async () => {
         _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelLButton);
         _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelMButton);
         _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelQButton);
         _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelHButton);
-        qrCode.setStuff({ correctLevel: CorrectLevel.Q })
+        const message: SetCorrectLevelMessage = { type: MessageTypes.SetCorrectLevel, correctLevel: CorrectLevel.Q };
+        await browser.runtime.sendMessage(message);
+        qrCode.setStuff({ correctLevel: CorrectLevel.Q });
     }
 
-    qrCodeCorrectLevelHButton.onclick = () => {
+    qrCodeCorrectLevelHButton.onclick = async () => {
         _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelLButton);
         _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelMButton);
         _setStyleCorrectLevelButtonUnselected(qrCodeCorrectLevelQButton);
         _setStyleCorrectLevelButtonSelected(qrCodeCorrectLevelHButton);
-        qrCode.setStuff({ correctLevel: CorrectLevel.H })
+        const message: SetCorrectLevelMessage = { type: MessageTypes.SetCorrectLevel, correctLevel: CorrectLevel.H };
+        await browser.runtime.sendMessage(message);
+        qrCode.setStuff({ correctLevel: CorrectLevel.H });
     }
 }
 
@@ -262,16 +280,19 @@ async function main() {
     console.log("foo");
 
     let urlPromise: Promise<browser.tabs.Tab[]> = browser.tabs.query({ currentWindow: true, active: true });
+    const message: GetQrSettingsMessage = { type: MessageTypes.GetQrSettings };
+    let qrSettingsPromise = browser.runtime.sendMessage(message);
 
     const allElements = createAndGetElements();
     combineElements(allElements)
 
     let url: string | undefined = (await urlPromise)[0].url;
+    let qrSettings: GetQrSettingsResponse = await qrSettingsPromise;
 
-    const qrCode = new Code(url, allElements.qrCode, {});
+    const qrCode = new Code(url, allElements.qrCode, qrSettings);
     const savedUrls = new SavedUrls((url: string) => { addSavedUrl(url, allElements, qrCode); }, allElements.savedUrlsMenu);
 
-    setStyles(url, allElements);
+    setStyles(url, qrCode, qrSettings.correctLevel, allElements);
     setText(url, allElements);
     addEvents(qrCode, url, savedUrls, allElements, allElements);
 
