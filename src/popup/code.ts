@@ -24,13 +24,15 @@ export default class Code {
         if (url === undefined) {
             this.url = "";
             // @ts-ignore
-            this.qr = new QRCode(this.subContainer, { text: url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight });
+            this.qr = new QRCode(this.subContainer, { text: url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight, useSVG: true });
             this.qr.clear();
         } else {
             // @ts-ignore
-            this.qr = new QRCode(this.subContainer, { text: url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight });
+            this.qr = new QRCode(this.subContainer, { text: url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight, useSVG: true });
             this.url = url;
         }
+
+        console.log(this.container);
     }
 
     private resetQrCode() {
@@ -43,7 +45,7 @@ export default class Code {
     setStuff({ correctLevel=settings.default.correctLevel, colorDark=settings.default.colorDark, colorLight=settings.default.colorLight }: OptionArgs) {
         this.resetQrCode();
         // @ts-ignore
-        this.qr = new QRCode(this.subContainer, { text: this.url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight });
+        this.qr = new QRCode(this.subContainer, { text: this.url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight, useSVG: true });
     }
 
     createCode(url: string) {
@@ -57,7 +59,7 @@ export default class Code {
         this.url = url;
         this.resetQrCode();
         // @ts-ignore
-        this.qr = new QRCode(this.subContainer, { text: url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight });
+        this.qr = new QRCode(this.subContainer, { text: url, correctLevel: correctLevel, colorDark: colorDark, colorLight: colorLight, useSVG: true });
     }
 
 }
