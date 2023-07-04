@@ -123,7 +123,7 @@ function setStyles(url: string | undefined, correctLevel: CorrectLevel, allEleme
         correctLevelContainer.className = "flex flex-row";
             correctLevelDescription.className = "flex m-auto text-black dark:text-neutral-200";
             correctLevelButtonContainer.className = "p-1 rounded-full bg-neutral-300 w-fit dark:bg-slate-600 text-black dark:text-neutral-200";
-        licensingText.className = "text-sky-600 dark:text-sky-700 text-sm underline decoration-dashed w-fit m-auto";
+        licensingText.className = "text-sky-600 dark:text-sky-400 text-sm underline decoration-dashed w-fit m-auto";
     
     input.disabled = true;
 
