@@ -24,16 +24,6 @@ npm run build
 
 Or build single parts:
 
-## extension/js/dist/content.js
-
-The TypeScript source files are under ```src/content``` and ```src/shared``` and the config files are under ```config/content```.
-
-Build script:
-
-```shell
-npm run build_wp_content
-```
-
 ## extension/js/dist/popup.js
 
 The TypeScript source files are under ```src/popup``` and ```src/shared``` and the config files are under ```config/popup```.
