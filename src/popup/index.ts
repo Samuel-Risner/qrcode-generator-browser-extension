@@ -123,7 +123,7 @@ function _setStylesCorrectLevelButtonUnselected({ correctLevelLButton, correctLe
 }
 
 function setStyles(url: string | undefined, correctLevel: CorrectLevel, darkColor: string, lightColor: string, allElements: AllElements, { appContents, topBar, popupButton, popupImage, saveUrlButton, darkModeButton, savedUrlsMenu, qrCode, urlOptionsContainer, pageButtonContainer, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelContainer, correctLevelDescription, correctLevelButtonContainer, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, qrOptionsContainer, downloadSVGButton, darkColorInput, switchColorButton, lightColorInput, licensingText }: AllElements) {
-    appContents.className = "bg-gray-100 dark:bg-zinc-800 grid grid-cols-1 gap-2 break-words w-80 text-center p-4";
+    appContents.className = "grid grid-cols-1 gap-2 break-words w-80 text-center p-4";
         topBar.className = "flex flex-row h-8";
             popupButton.className = "w-7";
                 popupImage.className = "invert-0 dark:invert active:w-6 m-auto";
@@ -218,21 +218,27 @@ function setText(url: string | undefined, darkColor: string, lightColor: string,
     licensingText.title = "This Repo is licensed under the MIT license. This does not include the file 'qrcode.js' which is located in 'extension/js/'. The file is licensed under the MIT license by davidshimjs. For more information see this extensions GitHub repo: https://github.com/Samuel-Risner/qrcode-generator-browser-extension#readme";
 }
 
-function setDarkMode({ app, darkModeButton }: AllElements, isDark: boolean) {
+function setDarkMode({ darkModeButton }: AllElements, isDark: boolean) {
     if (isDark) {
-        app.classList.add("dark");
+        document.body.classList.remove("bg-gray-100");
+        document.body.classList.add("bg-zinc-800");
+        document.body.classList.add("dark");
+
         darkModeButton.textContent = "🌕";
         darkModeButton.title = "Switch to light mode";
     } else {
-        app.classList.remove("dark");
+        document.body.classList.add("bg-gray-100");
+        document.body.classList.remove("bg-zinc-800");
+        document.body.classList.remove("dark");
+
         darkModeButton.textContent = "🌑";
         darkModeButton.title = "Switch to dark mode";
     }
 }
 
-function addEvents(code: Code, url: string | undefined, savedUrls: SavedUrls, allElements: AllElements, { appContents, popupButton, saveUrlButton, darkModeButton, savedUrlsMenu, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, downloadSVGButton, darkColorInput, switchColorButton, lightColorInput }: AllElements) {
+function addEvents(code: Code, url: string | undefined, savedUrls: SavedUrls, allElements: AllElements, { popupButton, saveUrlButton, darkModeButton, savedUrlsMenu, thisPageButton, customPageButton, savedUrlsButton, input, correctLevelLButton, correctLevelMButton, correctLevelQButton, correctLevelHButton, downloadSVGButton, darkColorInput, switchColorButton, lightColorInput }: AllElements) {
     popupButton.onclick = () => {
-        browser.windows.create( { url: settings.popupHtml, type: "popup", width: window.innerWidth, height: window.innerHeight + 1 });
+        browser.windows.create({ url: settings.popupHtml, type: "popup", width: 320 + 16, height: window.innerHeight + 40 });
     }
 
     saveUrlButton.onclick = () => {
@@ -362,7 +368,7 @@ async function main() {
     const qrSettingsAndDarkModePromise = browser.runtime.sendMessage(message);
 
     const allElements = createAndGetElements();
-    combineElements(allElements)
+    combineElements(allElements);
 
     const url: string | undefined = (await urlPromise)[0].url;
     const qrSettingsAndDarkMode: GetQrSettingsAndDarkModeResponse = await qrSettingsAndDarkModePromise;
