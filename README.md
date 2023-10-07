@@ -35,7 +35,7 @@ Or build single parts:
 
 ## extension/js/dist/popup.js
 
-The TypeScript source files are under ```src/popup``` and ```src/shared``` and the config files are under ```config/popup```.
+The TypeScript source files are under `src/popup` and `src/shared` and the config files are under `config/popup`.
 
 Build script:
 
@@ -45,7 +45,7 @@ npm run build_wp_popup
 
 ## extension/js/dist/background.js
 
-The TypeScript source files are under ```src/background``` and ```src/shared``` and the config files are under ```config/background```.
+The TypeScript source files are under `src/background` and `src/shared` and the config files are under `config/background`.
 
 Build script:
 
@@ -57,7 +57,7 @@ npm run build_wp_background
 
 This Repo is licensed under the MIT license.
 
-This license does not include the file "qrcode.js" which is located in "extension/js/". The file is licensed under the MIT license by davidshimjs which can be found in his [repo](https://github.com/davidshimjs/qrcodejs) under the name "LICENSE" and in this repo under "qrcode.js LICENSE/LICENSE".
+This license does not include the file `qrcode.js` which is located in `extension/js`. The file is licensed under the MIT license by davidshimjs which can be found in his [repo](https://github.com/davidshimjs/qrcodejs) under the name `LICENSE` and in this repo under `qrcode.js LICENSE/LICENSE`.
 
 GitHub permalinks:
 
