@@ -2,7 +2,7 @@
 
   "manifest_version": 2,
   "name": "QRcode Generator",
-  "version": "1.0",
+  "version": "1.1",
   "author": "Samuel Risner",
 
   "description": "Lets you generate QRCodes on the fly.",
