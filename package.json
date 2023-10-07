@@ -10,7 +10,7 @@
     "build_wp_popup": "webpack --config config/popup/webpack.config.js",
     "watch_wp_popup": "webpack --config config/popup/webpack.config.js --watch",
     "build_tw_popup": "tailwindcss -c ./config/popup/tailwind.config.cjs -i ./tw/popup.css -o ./extension/css/dist/popup.css --minify",
-    "watch_tw_popup": "tailwindcss -c ./config/popup/tailwind.config.cjs -i ./tw/popup.css -o ./extension/css/dist/popup.css --watch",
+    "watch_tw_popup": "tailwindcss -c ./config/popup/tailwind.config.cjs -i ./tw/popup.css -o ./extension/css/dist/popup.css --minify --watch",
 
     "build": "npm run build_tw_popup && npm run build_wp_background && npm run build_wp_popup"
   },
