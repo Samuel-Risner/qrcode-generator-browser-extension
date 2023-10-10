@@ -4,12 +4,12 @@ A browser extension that lets you generate QRCodes on the fly.
 
 # Features
 
-- Automatically generates a GQCode for the current page
-- Allows you to also generate QRCodes for other pages
-- Optional dark mode
-- Can create a popup window
-- URLs can be saved and reused
-- The colors of the QRCode are changeable
+- Automatically generates a QRCode for the current page
+- Generate QRCodes for other pages
+- Dark mode
+- Popup window
+- URL saving
+- Changable QRCode colors
 - Export as SVG
 
 # Build instructions
